@@ -14,13 +14,16 @@ class player(mayGameEntity):
             self.move(1, 0)
             
         if pyxel.btn(pyxel.KEY_SPACE) and not self.in_air:
-            self.move(0, -10)
-            
-        #if pyxel.btn(pyxel.KEY_DOWN):
-        #    self.move(0, 1)
+            self._jump(20)
         
-        if self.in_air:
+        if self.in_air and not self.jump:
             self.fall()
+            
+        elif self.yMove != 0:
+            self.move(0, -1.5)
+            self.yMove -= 1
+            if self.yMove == 0:
+                self.jump = False
         ## handle actions
         
     def _draw(self):

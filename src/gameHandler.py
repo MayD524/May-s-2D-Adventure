@@ -14,9 +14,10 @@ class GameHandler:
         self.gameObjects:mayGameObject = [i for i in self.gameObjects if i.isAlive]
     
     def check_colision(self) -> None:
-        player_box = (self.player.x + self.player.width, self.player.y + self.player.height)
+        player_box   = (self.player.x + self.player.width, self.player.y + self.player.height)
         playerXRange = range(round(self.player.x), round(player_box[0]))
         playerYRange = range(round(self.player.y), round(player_box[1]))
+        onFloor      = False ## just so we can more than one floor
         
         for ent in self.gameObjects:
             ent_box = (ent.x + ent.width, ent.y + ent.height)
@@ -26,12 +27,12 @@ class GameHandler:
             if any(i in playerXRange for i in entXRange) and any(i in playerYRange for i in entYRange):
                 if ent.name == 'floor':
                     self.player.in_air = False
-                    
-            else:
-                if ent.name == 'floor':
-                    self.player.in_air = True
+                    onFloor = True                
             
-        
+            ## set falling    
+            else:
+                if ent.name == 'floor' and not onFloor:
+                    self.player.in_air = True
                         
     def updateList(self, list:list) -> None:
         for elm in list:

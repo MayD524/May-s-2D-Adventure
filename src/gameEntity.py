@@ -8,10 +8,11 @@ class mayGameEntity:
         self.height     = height
         self.color      = color
         self.health     = max_health
+        self.yMove      = 0
         
         self.is_alive = True
         self.in_air   = True
-        
+        self.jump     = False
     def move(self, dx:int, dy:int) -> None:
         """ move the object """
         self.x += dx
@@ -27,7 +28,13 @@ class mayGameEntity:
         """ Make entity fall """
         if self.in_air:
             self.move(0, 1)
-        
+    
+    def _jump(self, end_height:int) -> None:
+        """ jump to a height """
+        #self.in_air = True
+        self.jump   = True
+        self.yMove  = end_height
+     
     def _takeDamage(self, damage:int):
         """ take damage from an attack """
         self.health -= damage

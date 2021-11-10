@@ -51,7 +51,9 @@ class App(GameHandler):
         self.score = 0
         self.player = player(pyxel.width / 2, pyxel.height - 40, 10, 10, p_health=100)
         gameFloor = mayFloor(0, pyxel.height - 20, 200, 20)
+        testFloor = mayFloor(10, pyxel.height - 30, 50, 10)
         self.gameObjects.append(gameFloor)
+        self.gameObjects.append(testFloor)
         
         pyxel.run(self.update, self.draw)
         
