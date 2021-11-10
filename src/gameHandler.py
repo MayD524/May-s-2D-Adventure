@@ -14,17 +14,25 @@ class GameHandler:
         self.gameObjects:mayGameObject = [i for i in self.gameObjects if i.isAlive]
     
     def check_colision(self) -> None:
+        player_box = (self.player.x + self.player.width, self.player.y + self.player.height)
+        playerXRange = range(round(self.player.x), round(player_box[0]))
+        playerYRange = range(round(self.player.y), round(player_box[1]))
+        
         for ent in self.gameObjects:
-            ## TODO: check colision
-            ## check if ent is touching player and if so, print the ent's name
-            ## get the size of ent and player and check if they are touching
-            ## if they are, print the ent's name
-            if ent.x + ent.width > self.player.x and ent.x < self.player.x + self.player.width:
-                if ent.y + ent.height > self.player.y and ent.y < self.player.y + self.player.height:
-                    if ent.dmg > 0:
-                        self.palyer.health -= ent.dmg
-                        print(f"{ent.name} hit you for {ent.dmg} damage")
-    
+            ent_box = (ent.x + ent.width, ent.y + ent.height)
+            entXRange = range(round(ent.x), round(ent_box[0]))
+            entYRange = range(round(ent.y), round(ent_box[1]))
+            
+            if any(i in playerXRange for i in entXRange) and any(i in playerYRange for i in entYRange):
+                if ent.name == 'floor':
+                    self.player.in_air = False
+                    
+            else:
+                if ent.name == 'floor':
+                    self.player.in_air = True
+            
+        
+                        
     def updateList(self, list:list) -> None:
         for elm in list:
             elm._update()

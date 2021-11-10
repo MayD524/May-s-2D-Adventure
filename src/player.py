@@ -13,12 +13,14 @@ class player(mayGameEntity):
         if pyxel.btn(pyxel.KEY_RIGHT):
             self.move(1, 0)
             
-        if pyxel.btn(pyxel.KEY_UP):
-            self.move(0, -1)
+        if pyxel.btn(pyxel.KEY_SPACE) and not self.in_air:
+            self.move(0, -10)
             
-        if pyxel.btn(pyxel.KEY_DOWN):
-            self.move(0, 1)
+        #if pyxel.btn(pyxel.KEY_DOWN):
+        #    self.move(0, 1)
         
+        if self.in_air:
+            self.fall()
         ## handle actions
         
     def _draw(self):
