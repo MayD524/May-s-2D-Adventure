@@ -2,41 +2,83 @@ from gameEntity  import mayGameEntity
 from gameObjects import mayGameObject
 import pyxel
 
+GAME_ENTITY = 0
+GAME_OBJECT = 1
 
 class GameHandler:
     def __init__(self):
-        self.entityList:mayGameEntity = []
         self.gameObjects:mayGameObject = []
         self.player:mayGameEntity = None
     
     def _cleanup(self) -> None:
-        self.entityList:mayGameEntity = [i for i in self.entityList if i.isAlive]
         self.gameObjects:mayGameObject = [i for i in self.gameObjects if i.isAlive]
     
-    def check_colision(self) -> None:
-        player_box   = (self.player.x + self.player.width, self.player.y + self.player.height)
-        playerXRange = range(round(self.player.x), round(player_box[0]))
-        playerYRange = range(round(self.player.y), round(player_box[1]))
-        onFloor      = False ## just so we can more than one floor
+    def get_object(self, object_name:str) -> mayGameEntity:
+        for obj in self.gameObjects:
+            if obj.name == object_name:
+                return obj
+        return None
+    
+    def check_collision(self, agent:mayGameEntity) -> None:
+        agent_box = (agent.x + agent.width, agent.y + agent.height)
+        agentYRange = range(round(agent.y), round(agent_box[1]))
+        agentXRange = range(round(agent.x), round(agent_box[0]))
         
+        onFloor = False
         for ent in self.gameObjects:
+            onTop = False
+            
+            if (ent == agent or not ent.has_col):
+                continue
+            
             ent_box = (ent.x + ent.width, ent.y + ent.height)
             entXRange = range(round(ent.x), round(ent_box[0]))
             entYRange = range(round(ent.y), round(ent_box[1]))
             
-            if any(i in playerXRange for i in entXRange) and any(i in playerYRange for i in entYRange):
-                if ent.name == 'floor':
+            ## is touching an object
+            if any(i in agentXRange for i in entXRange) and any(i in agentYRange for i in entYRange):
+                if ent.name == 'master_floor':
+                    agent.in_air = False
+                    onFloor = True
+                    continue
+                #if agent.name != 'player' or agent.name != None:
+                #    print(ent.name)
+                ## check for botoom collision
+                if agent.y > entYRange[0]:
+                    #print('bottom')
+                    pass
+                    
+                ## check for top collision
+                if agent_box[1] <= entYRange[0] + 1:
+                    onFloor = True
                     self.player.in_air = False
-                    onFloor = True                
+                    onTop = True
+                
+                ## check for right collision
+                if agent.x > entXRange[0] and not onTop:
+                    agent.x = entXRange[-1]
+                        
+                ## check for left collision
+                elif agent_box[0] > entXRange[0] and not onTop:
+                    agent.x = entXRange[0] - agent.width
             
             ## set falling    
             else:
-                if ent.name == 'floor' and not onFloor:
-                    self.player.in_air = True
-                        
+                agent.in_air = True if not onFloor else False
+    
+    def newObject(self, object_name:str, object_id:int, width:int, height:int) -> None:
+        if object_id == GAME_ENTITY:
+            ent = mayGameEntity(pyxel.width / 2, pyxel.height / 2, width, height, 5, 100)
+            ent.name = object_name
+            #self.entityList.append(ent)
+            self.gameObjects.append(ent)
+              
     def updateList(self, list:list) -> None:
         for elm in list:
+            if elm.canMove:
+                self.check_collision(elm)
             elm._update()
+            
             
     def drawList(self, list:list) -> None:
         for elm in list:

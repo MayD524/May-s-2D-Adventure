@@ -4,6 +4,7 @@ import pyxel
 class player(mayGameEntity):
     def __init__(self, x:int, y:int, w:int, h:int, p_health:int) -> None:
         mayGameEntity.__init__(self, x, y, w, h, None, p_health)
+        self.name = 'player'
         
     def _update(self) -> None:
         ## move the player
@@ -27,4 +28,5 @@ class player(mayGameEntity):
         ## handle actions
         
     def _draw(self):
-        pyxel.blt(self.x, self.y, 0, 0, 0, self.width, self.height, 0)
+        pyxel.rect(self.x, self.y, self.width, self.height, 7)
+        #pyxel.blt(self.x, self.y, 0, 0, 0, self.width, self.height, 0)

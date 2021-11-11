@@ -1,7 +1,6 @@
 import pyxel
 import math
 
-
 class mayGameObject:
     def __init__(self, x:int, y:int, w:int, h:int, has_col:bool, damageOnCol:int) -> None:
         self.x       = x
@@ -11,6 +10,7 @@ class mayGameObject:
         self.has_col = has_col
         self.dmg     = damageOnCol
         self.alive   = True
+        self.canMove = False
         self.name    = "mayGameObject"
         
     def move(self, dx:int, dy:int) -> None:

@@ -11,8 +11,12 @@ class mayGameEntity:
         self.yMove      = 0
         
         self.is_alive = True
+        self.has_col  = True
         self.in_air   = True
         self.jump     = False
+        self.canMove  = True
+        self.name     = None
+        
     def move(self, dx:int, dy:int) -> None:
         """ move the object """
         self.x += dx
@@ -31,10 +35,9 @@ class mayGameEntity:
     
     def _jump(self, end_height:int) -> None:
         """ jump to a height """
-        #self.in_air = True
         self.jump   = True
         self.yMove  = end_height
-     
+    
     def _takeDamage(self, damage:int):
         """ take damage from an attack """
         self.health -= damage
@@ -44,7 +47,10 @@ class mayGameEntity:
     
     def _draw(self):
         """ draw a game entity (player, enemy, living) """
+        pyxel.rect(self.x, self.y, self.width, self.height, self.color)
     
     def _update(self):
         """ update a game entity state (anything 'living') """
+        if self.in_air and not self.jump:
+            self.fall()
         
