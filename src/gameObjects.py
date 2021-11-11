@@ -9,9 +9,10 @@ class mayGameObject:
         self.height  = h
         self.has_col = has_col
         self.dmg     = damageOnCol
-        self.alive   = True
+        self.isAlive = True
         self.canMove = False
         self.name    = "mayGameObject"
+        self.health  = None
         
     def move(self, dx:int, dy:int) -> None:
         """ move the object """
@@ -24,12 +25,12 @@ class mayGameObject:
         self.y = max(self.y, 0)
         self.y = min(self.y, pyxel.height - self.height)
         
-    def _col(self) -> None:
-        """ collision handler """
-        
     def _kill(self) -> None:
         """ kill the object """
-        
+    
+    def _takeDamage(self, damage:int) -> None:
+        """ handle damage """
+    
     def _draw(self) -> None:
         """ draw the object """
         

@@ -1,8 +1,8 @@
-from gameEntity import mayGameEntity
+from projectile import mayProjectile
 from gameHandler import GameHandler
-from gameObjects import mayGameObject
 from floor import mayFloor
 from player import player
+from npc import mayNPC
 import pyxel
 import math
 
@@ -54,8 +54,9 @@ class App(GameHandler):
         testFloor = mayFloor(10, pyxel.height - 30, 50, 10)
         self.gameObjects.append(gameFloor)
         self.gameObjects.append(testFloor)
+        npc = mayNPC(30, pyxel.height - 50, 10, 10, 100, 1, "npc-1")
+        self.gameObjects.append(npc)
         
-        self.newObject("test", 0, 50, 25)
         self.player = player(pyxel.width / 2, pyxel.height - 40, 10, 10, p_health=100)
         pyxel.run(self.update, self.draw)
         
@@ -64,6 +65,10 @@ class App(GameHandler):
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
             
+        if pyxel.btnp(pyxel.KEY_R):
+            proj = mayProjectile(0, pyxel.height - 50, 10, 5, 6, 10, 1, 10)
+            self.gameObjects.append(proj)
+        
         if self.scene == SCENE_PLAYING:
             self.update_play()
             
@@ -77,6 +82,7 @@ class App(GameHandler):
         self.player._update()
         self.check_collision(self.player)
         self.updateList(self.gameObjects)
+        self._cleanup()
         
     
     def draw_play_scene(self) -> None:

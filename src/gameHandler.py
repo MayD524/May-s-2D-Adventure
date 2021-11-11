@@ -41,8 +41,7 @@ class GameHandler:
                     agent.in_air = False
                     onFloor = True
                     continue
-                #if agent.name != 'player' or agent.name != None:
-                #    print(ent.name)
+
                 ## check for botoom collision
                 if agent.y > entYRange[0]:
                     #print('bottom')
@@ -55,12 +54,18 @@ class GameHandler:
                     onTop = True
                 
                 ## check for right collision
-                if agent.x > entXRange[0] and not onTop:
+                elif agent.x > entXRange[0] and not onTop:
                     agent.x = entXRange[-1]
                         
                 ## check for left collision
                 elif agent_box[0] > entXRange[0] and not onTop:
                     agent.x = entXRange[0] - agent.width
+                
+                 
+                if ent.dmg > 0 and agent.health:
+                    agent._takeDamage(ent.dmg)
+                    print(agent.health)
+                        
             
             ## set falling    
             else:
@@ -75,6 +80,7 @@ class GameHandler:
               
     def updateList(self, list:list) -> None:
         for elm in list:
+
             if elm.canMove:
                 self.check_collision(elm)
             elm._update()

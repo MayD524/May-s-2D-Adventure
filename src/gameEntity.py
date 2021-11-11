@@ -9,8 +9,9 @@ class mayGameEntity:
         self.color      = color
         self.health     = max_health
         self.yMove      = 0
+        self.dmg        = 0 ## change if you want to have different damage values
         
-        self.is_alive = True
+        self.isAlive  = True
         self.has_col  = True
         self.in_air   = True
         self.jump     = False
@@ -42,12 +43,13 @@ class mayGameEntity:
         """ take damage from an attack """
         self.health -= damage
         if self.health <= 0:
-            self.is_alive = False
+            self.isAlive = False
             print("You died!")
     
     def _draw(self):
         """ draw a game entity (player, enemy, living) """
-        pyxel.rect(self.x, self.y, self.width, self.height, self.color)
+        if self.isAlive:
+            pyxel.rect(self.x, self.y, self.width, self.height, self.color)
     
     def _update(self):
         """ update a game entity state (anything 'living') """
