@@ -25,9 +25,8 @@ class GameHandler:
         agentXRange = range(round(agent.x), round(agent_box[0]))
         
         onFloor = False
+        
         for ent in self.gameObjects:
-            onTop = False
-            
             if (ent == agent or not ent.has_col):
                 continue
             
@@ -44,21 +43,19 @@ class GameHandler:
 
                 ## check for botoom collision
                 if agent.y > entYRange[0]:
-                    #print('bottom')
-                    pass
+                    agent.y = entYRange[-1]
                     
                 ## check for top collision
-                if agent_box[1] <= entYRange[0] + 1:
+                elif agent_box[1] <= entYRange[0] + 1:
                     onFloor = True
                     self.player.in_air = False
-                    onTop = True
                 
                 ## check for right collision
-                elif agent.x > entXRange[0] and not onTop:
+                elif agent.x > entXRange[0]:
                     agent.x = entXRange[-1]
                         
                 ## check for left collision
-                elif agent_box[0] > entXRange[0] and not onTop:
+                elif agent_box[0] > entXRange[0]:
                     agent.x = entXRange[0] - agent.width
                 
                  

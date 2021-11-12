@@ -1,63 +1,31 @@
 from projectile import mayProjectile
 from gameHandler import GameHandler
+from gameConsts import *
 from floor import mayFloor
 from player import player
 from npc import mayNPC
 import pyxel
 import math
 
-SCENE_TITLE   = 0
-SCENE_PLAYING = 1
-SCENE_END     = 2
-SCENE_WIN     = 3
-
-
 class App(GameHandler):
     def __init__(self):
         GameHandler.__init__(self)
         pyxel.init(200, 160, caption="Pyxel Game")
         
-        pyxel.image(0).set(
-            0,
-            0,
-            [
-                "00c00c00",
-                "0c7007c0",
-                "0c7007c0",
-                "c703b07c",
-                "77033077",
-                "785cc587",
-                "85c77c58",
-                "0c0880c0",
-            ],
-        )
-
-        pyxel.image(0).set(
-            8,
-            0,
-            [
-                "00088000",
-                "00ee1200",
-                "08e2b180",
-                "02882820",
-                "00222200",
-                "00012280",
-                "08208008",
-                "80008000",
-            ],
-        )
+        pyxel.load("my_resource.pyxres")
         
         self.scene = SCENE_PLAYING
         self.score = 0
         gameFloor = mayFloor(0, pyxel.height - 20, 200, 20)
         gameFloor.name = "master_floor"
-        testFloor = mayFloor(10, pyxel.height - 30, 50, 10)
+        testFloor = mayFloor(10, pyxel.height - 55, 50, 10)
+        testFloor.imgID = 1
         self.gameObjects.append(gameFloor)
         self.gameObjects.append(testFloor)
-        npc = mayNPC(30, pyxel.height - 50, 10, 10, 100, 1, "npc-1")
-        self.gameObjects.append(npc)
+        #npc = mayNPC(30, pyxel.height - 50, 10, 10, 100, 1, "npc-1")
+        #self.gameObjects.append(npc)
         
-        self.player = player(pyxel.width / 2, pyxel.height - 40, 10, 10, p_health=100)
+        self.player = player(pyxel.width / 2, pyxel.height - 40, TILEOFFSET + 1, TILEOFFSET + 1, p_health=100)
         pyxel.run(self.update, self.draw)
         
         

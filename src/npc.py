@@ -8,6 +8,7 @@ class mayNPC(mayGameEntity):
         self.speed = speed 
         self.name = name
         
+        
     def _update(self) -> None:
         if self.isAlive:
             move = random.random() * random.randint(-1, 1)
@@ -20,4 +21,5 @@ class mayNPC(mayGameEntity):
             
     def _draw(self) -> None:
         if self.isAlive:
-            pyxel.rect(self.x, self.y, self.width, self.height, self.color)
+            #pyxel.rect(self.x, self.y, self.width, self.height, self.color)
+            pyxel.blt(self.x, self.y, 1, 0, 0, self.width, self.height, self.color)
