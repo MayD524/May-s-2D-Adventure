@@ -1,3 +1,4 @@
+from gameConsts import *
 import pyxel
 
 class mayGameEntity:
@@ -8,8 +9,13 @@ class mayGameEntity:
         self.height     = height
         self.color      = color
         self.health     = max_health
+        self.speed      = DEFAULT_SPEED
         self.yMove      = 0
         self.dmg        = 0 ## change if you want to have different damage values
+        self.fallRate   = DEFAULT_FALL_RATE
+        
+        
+        self.isTouching = []
         
         self.isAlive  = True
         self.has_col  = True
@@ -20,8 +26,13 @@ class mayGameEntity:
         
     def move(self, dx:int, dy:int) -> None:
         """ move the object """
-        self.x += dx
-        self.y += dy
+        speedCap = 1
+        if DEFAULT_FPS > 30:
+            speedCap = 1 / (DEFAULT_FPS / 30)
+        
+            
+        self.x += dx * speedCap
+        self.y += dy * speedCap
         
         self.x = max(self.x, 0)
         self.x = min(self.x, pyxel.width - self.width)
@@ -54,5 +65,4 @@ class mayGameEntity:
     def _update(self):
         """ update a game entity state (anything 'living') """
         if self.in_air and not self.jump:
-            self.fall()
-        
+            self.fall()        

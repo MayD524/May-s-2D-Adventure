@@ -14,5 +14,8 @@ class mayProjectile(mayGameObject):
         if self.x > pyxel.width or self.x < 0:
             self.isAlive = False
             
+        if len(self.isTouching) > 0:
+            self.isAlive = False
+            
     def _draw(self):
         pyxel.rect(self.x, self.y, self.width, self.height, self.color)
