@@ -2,7 +2,7 @@ from gameObjects import mayGameObject
 import pyxel
 
 class mayFloor:
-    def __init__(self, x, y, width:int=200, height:int=50):
+    def __init__(self, x, y, width:int=200, height:int=50, inverted:bool=False):
         
         if width % 8 != 0:
             print("Floor width must be a multiple of 8, this may cause issues with drawing.")
@@ -18,14 +18,15 @@ class mayFloor:
         self.name       = "Floor"
         self.health     = None
         self.isTouching = []
-        
-        
+        self.isInverted = inverted
         
         leftEnd = mayGameObject(x, y, 8, 8, True, 0)
         rightEnd = mayGameObject(x+width-8, y, 8, 8, True, 0)
         
         leftEnd.name = "Floor_left"
         rightEnd.name = "Floor_right"
+        leftEnd.isInverted = self.isInverted
+        rightEnd.isInverted = self.isInverted
         
         self.blobs = [leftEnd, rightEnd]
         if width > 16:
@@ -35,7 +36,7 @@ class mayFloor:
             for tx in range(midStart, midEnd, 16):
                 midSection.append(mayGameObject(tx, y, 16, 8, True, 0))
             
-            for mid in midSection: mid.name = "Floor_center"
+            for mid in midSection: mid.name = "Floor_center"; mid.isInverted = self.isInverted
             self.blobs.extend(midSection)
         
         ## blobs are each section of the floor

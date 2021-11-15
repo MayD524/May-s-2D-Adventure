@@ -10,7 +10,7 @@ IS_GAME_OBJECT   = 1
 TILEOFFSET = 8
 
 ## Player Stuff
-PLAYER_DEFAULT_HEALTH = 100
+PLAYER_DEFAULT_HEALTH     = 100
 PLAYER_DEFAULT_MAX_HEALTH = 150
 
 ## for facing directions
@@ -43,9 +43,18 @@ COIN_SPRITE_IMG = 1
 COIN_X_OFFSET   = 0
 COIN_Y_OFFSET   = 16
 
+## health kit img location
+HEALTH_KIT_X_OFFSET = 8
+HEALTH_KIT_Y_OFFSET = 16
+
+## anything higher than 120 breaks things
+## recommended is to be 30 or 60
 DEFAULT_FPS = 60
 
-NPC_TYPE_ENEMY = 0
+NPC_SIMPLE_ENEMY = 0
+NPC_RANGED_ENEMY = 1
+
+NPC_TYPE_ENEMY = [NPC_SIMPLE_ENEMY, NPC_RANGED_ENEMY]
 
 JUMP_CHANCE = 0.5
 WAIT_CHANCE = 0.99

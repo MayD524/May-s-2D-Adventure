@@ -14,7 +14,6 @@ class mayGameEntity:
         self.dmg        = 0 ## change if you want to have different damage values
         self.fallRate   = DEFAULT_FALL_RATE
         
-        
         self.isTouching = []
         
         self.isAlive  = True
@@ -23,6 +22,7 @@ class mayGameEntity:
         self.jump     = False
         self.canMove  = True
         self.name     = None
+        self.centerPoint = (self.x + self.width // 2, self.y + self.height // 2)
         
     def move(self, dx:int, dy:int) -> None:
         """ move the object """

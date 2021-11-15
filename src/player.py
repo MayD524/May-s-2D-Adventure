@@ -2,6 +2,8 @@ from gameConsts import *
 from gameEntity import mayGameEntity
 import pyxel
 
+from gameObjects import mayGameObject
+
 class player(mayGameEntity):
     def __init__(self, x:int, y:int, w:int, h:int, p_health:int) -> None:
         mayGameEntity.__init__(self, x, y, w, h, None, p_health)
@@ -37,11 +39,28 @@ class player(mayGameEntity):
             self.fallRate = DEFAULT_FALL_RATE
         
         for (blob, direction) in self.isTouching:
-            if blob.name == 'coin' and blob.isAlive:
+            if not blob.isAlive:
+                continue
+            
+            if blob.name == 'coin':
                 self.score += blob.incScore
                 blob.isAlive = False
-        
-        
+                
+            if isinstance(blob, mayGameEntity):
+                if blob.npc_type in NPC_TYPE_ENEMY and direction == 'top':
+                    blob.isAlive = False
+                    self.score += 1
+                    
+                elif blob.npc_type in NPC_TYPE_ENEMY and direction != "top":
+                    self.health -= 10
+                    
+            elif isinstance(blob, mayGameObject):
+                if blob.name == 'healthKit':
+                    self.health += blob.health_inc
+                    if self.health > PLAYER_DEFAULT_MAX_HEALTH:
+                        self.health = PLAYER_DEFAULT_MAX_HEALTH
+                    blob.isAlive = False
+                    
         if self.in_air and not self.jump:
             self.fall()
         

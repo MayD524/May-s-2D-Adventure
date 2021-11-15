@@ -1,6 +1,6 @@
 from projectile import mayProjectile
 from gameHandler import GameHandler
-from gameCoin import mayCoin
+from collectables import *
 from gameConsts import *
 from floor import mayFloor
 from player import player
@@ -26,9 +26,10 @@ class App(GameHandler):
         gameFloor.name  = "master_floor"
         
         testFloor = mayFloor(10, pyxel.height - 28, 48, 8)
-        test2Floor = mayFloor(60, pyxel.height - 35, 48, 8)
+        test2Floor = mayFloor(60, pyxel.height - 50, 48, 8)
         test3Floor = mayFloor(110, 30, 16, 8)
         self.gameObjects.append(mayCoin(60, 120))
+        self.gameObjects.append(mayHealthKit(80, 120))
         
         test2Floor.imgID = 1
         test2Floor.name = "test2_floor"
@@ -41,7 +42,10 @@ class App(GameHandler):
         self.gameObjects.append(test2Floor)
         self.gameObjects.append(test3Floor)
         
-        npc = mayNPC(30, pyxel.height - 50, 8, 8, 100, 1, "npc-1")
+        #npc = mayNPC(30, pyxel.height - 50, 8, 8, 100, .4, NPC_SIMPLE_ENEMY ,"enemy-npc-1")
+        #self.gameObjects.append(npc)
+        
+        npc = mayNPC(60, pyxel.height - 50, 8, 8, 100, .4, NPC_RANGED_ENEMY ,"enemy-npc-1")
         self.gameObjects.append(npc)
         
         self.player = player(pyxel.width / 2, pyxel.height - 40, TILEOFFSET + 1, TILEOFFSET + 1, p_health=self.pHealth)

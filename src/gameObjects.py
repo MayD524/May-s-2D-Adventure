@@ -2,6 +2,8 @@ from gameConsts import *
 import pyxel
 import math
 
+from gameEntity import mayGameEntity
+
 class mayGameObject:
     def __init__(self, x:int, y:int, w:int, h:int, has_col:bool, damageOnCol:int) -> None:
         self.x          = x
@@ -16,6 +18,8 @@ class mayGameObject:
         self.name       = "mayGameObject"
         self.health     = None
         self.isTouching = []
+        self.isInverted = False
+        self.centerPoint= (self.x + self.width // 2, self.y + self.height // 2)
         
     def move(self, dx:int, dy:int) -> None:
         """ move the object """
@@ -37,14 +41,19 @@ class mayGameObject:
     def _draw(self) -> None:
         """ draw the object """
         if self.name.startswith('Floor'):
-            if self.name == 'Floor_left':
-                pyxel.blt(self.x, self.y, 1, 0, 0, self.width, self.height, 0)
+            x = 0
+            y = 0
 
-            elif self.name == 'Floor_right':
-                pyxel.blt(self.x, self.y, 1, 8, 0, self.width, self.height, 0)
+            if 'Floor_right' in self.name:
+                x += 8
         
-            elif self.name == 'Floor_center':
-                pyxel.blt(self.x, self.y, 1, 0, 8, self.width, self.height, 0)
+            elif 'Floor_center' in self.name:
+                y += 8
+                
+            if self.isInverted:
+                x += 16
+                
+            pyxel.blt(self.x, self.y, 1, x, y, self.width, self.height, 0)
 
     def _update(self) -> None:
         """ update the object """

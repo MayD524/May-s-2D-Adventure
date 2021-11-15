@@ -5,6 +5,8 @@ from gameObjects import mayGameObject
 from gameConsts import *
 import pyxel
 
+from npc import mayNPC
+
 class GameHandler:
     def __init__(self):
         self.gameObjects:mayGameObject = []
@@ -73,27 +75,32 @@ class GameHandler:
                  
                 if ent.dmg > 0 and agent.health:
                     agent._takeDamage(ent.dmg)
-                    print(agent.health)
-                    
+                
                 agent.isTouching.append(touchingTup)
-                        
-            
+               
             ## set falling    
             else:
                 agent.in_air = True if not onFloor else False
-
+        
     def newObject(self, object_name:str, object_id:int, width:int, height:int) -> None:
         if object_id == GAME_ENTITY:
             ent = mayGameEntity(pyxel.width / 2, pyxel.height / 2, width, height, 5, 100)
             ent.name = object_name
             #self.entityList.append(ent)
             self.gameObjects.append(ent)
-              
+
+    
     def updateList(self, elmList:list[mayGameObject]) -> None:
         
         for elm in elmList:
-            if elm.canMove:
+            if elm.canMove or isinstance(elm, mayGameEntity):
                 self.check_collision(elm)
+                
+            if elm.isAlive:
+                ## do things that require gameHandler here
+                if isinstance(elm, mayNPC) and elm.npc_type == NPC_RANGED_ENEMY and elm.shooting:
+                    self.gameObjects.append(elm.spawn_projectile())
+                    elm.shooting = False
         
         threads = [start_new_thread(elm._update, ()) for elm in elmList]  
         
