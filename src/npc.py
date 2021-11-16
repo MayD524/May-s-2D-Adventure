@@ -70,7 +70,6 @@ class mayNPC(mayGameEntity):
                 self.waitFor = 0
     
     def spawn_projectile(self, speed:int=1, height:int=2, width:int=2) -> mayProjectile:
-        print('shooting')
         start_x = self.x + self.width + 5 if self.direction == 1 else self.x - 5
         start_y = self.y + self.height // 2
         return mayProjectile(start_x, start_y, height, width, direction=self.direction, speed=speed)
