@@ -28,10 +28,16 @@ class GameHandler:
         agent.isTouching = []
         onFloor = False
         
+        if agent.name == "player":
+            if agent.y >= 151:
+                agent.health -= 100
+                return
+        
         for ent in self.gameObjects:
             ## ignore if it doesn't matter
             if (ent == agent or not ent.has_col):
                 continue
+            
             
             ent_box = (ent.x + ent.width, ent.y + ent.height)
             entXRange = range(round(ent.x), round(ent_box[0]))

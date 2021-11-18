@@ -1,6 +1,29 @@
+import argparse
 import pygame
 
+
 BACKGROUND_COLOR = (0, 0, 0)
+
+DEFAULT_CELL_COLOR = (255, 0, 255)
+
+
+## Floor types 
+MASTER_FLOOR = (20, 64, 13)
+FLOOR_TYPE_GRASS = (34, 130, 18)
+FLOOR_TYPE_ANIT  = (143, 17, 166)
+
+## Player
+PLAYER_SPAWN = (240, 250, 47)
+
+## NPC
+NPC_TYPE1_SPAWN = (201, 26, 50) ## default
+NPC_TYPE2_SPAWN = (85, 38, 201) ## ranged
+
+## Collectables
+COIN_SPAWN = (154, 204, 27)
+HEALTH_SPAWN = (148, 224, 213)
+
+
 GAME_WIDTH = 1728
 GAME_HEIGHT = 1280
 
@@ -26,6 +49,8 @@ class mapMaker_box:
     def check_if_clicked(self, mouse_pos:tuple[int], screen:pygame.Surface) -> bool:
         if mouse_pos[0] in self.hitBox[0] and mouse_pos[1] in self.hitBox[1]:
             self.isFull = not self.isFull
+            if not self.isFull:
+                self.color = self.default_color
             return True
                     
         self.draw(screen)
@@ -35,7 +60,7 @@ class mapMaker_box:
         if self.isFull:
             pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
         else:
-            pygame.draw.rect(screen, self.default_color, (self.x, self.y, self.width, self.height), 2)
+            pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height), 2)
 
 class mapMaker_button:
     def __init__(self, x:int, y:int, width:int, height:int, color:tuple[int], numerical_value:int):
@@ -72,6 +97,11 @@ class MapMaker:
         self.mouseDown = False
         self.prevClicked = []
         
+        parser = argparse.ArgumentParser()
+        parser.add_argument("-m", "--map_name", type=str, default="map.mtdmap")
+
+        self.args = parser.parse_args()
+        
         self.init_draw()
         
     
@@ -81,7 +111,14 @@ class MapMaker:
         '''
         pygame.draw.rect(self.screen, (255, 255, 255), pygame.Rect(GAME_WIDTH - 64, 0, 64, GAME_HEIGHT), 2)    
         self.buttons = [
-            mapMaker_button(GAME_WIDTH - 64, 0, 64, 64, (255, 0, 1), 1),
+            mapMaker_button(GAME_WIDTH - 64, 0, 64, 64, MASTER_FLOOR, 1),
+            mapMaker_button(GAME_WIDTH - 64, 64, 64, 64, FLOOR_TYPE_GRASS, 2),
+            mapMaker_button(GAME_WIDTH - 64, 128, 64, 64, FLOOR_TYPE_ANIT, 3),
+            mapMaker_button(GAME_WIDTH - 64, 192, 64, 64, PLAYER_SPAWN, 4),
+            mapMaker_button(GAME_WIDTH - 64, 256, 64, 64, NPC_TYPE1_SPAWN, 5),
+            mapMaker_button(GAME_WIDTH - 64, 320, 64, 64, NPC_TYPE2_SPAWN, 6),
+            mapMaker_button(GAME_WIDTH - 64, 384, 64, 64, COIN_SPAWN, 7),
+            mapMaker_button(GAME_WIDTH - 64, 448, 64, 64, HEALTH_SPAWN, 8),
         ]
         for y in range(0, GAME_HEIGHT, 64):
             for x in range(0, GAME_WIDTH - 120, 64):
@@ -125,12 +162,23 @@ class MapMaker:
                 cell.setState(self.cureMode)
                 cell.draw(self.screen)        
                 self.prevClicked.append(cell)
-        
-       
-        self.draw_screen()
 
-        
-        
+        self.draw_screen()
+    
+    def save_map(self) -> None:
+        ## save the map
+        with open(self.args.map_name, 'wb') as f:
+            for cell in self.cells:
+                cell_state = cell.getState()
+                f.write(bytes([cell_state[1][0] if cell_state[1][0] != 255 and cell_state[0] else 0]))
+                
+                
+    
+    def check_hotkeys(self) -> None:
+        if pygame.K_LCTRL in self.isPressed:
+            if pygame.K_s in self.isPressed:
+                self.save_map()
+    
     def gameMain(self):
         while self.running:
             for event in pygame.event.get():
@@ -151,6 +199,8 @@ class MapMaker:
                 if event.type == pygame.MOUSEBUTTONDOWN or self.mouseDown:
                     self.draw_at_cursor()
                     self.mouseDown = True
+                    
+            self.check_hotkeys()
                     
                 
 

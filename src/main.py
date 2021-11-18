@@ -6,15 +6,88 @@ from floor import mayFloor
 from player import player
 from npc import mayNPC
 import pyxel
-import math
+import json
 
 class App(GameHandler):
     def __init__(self):
         GameHandler.__init__(self)
         pyxel.init(208, 160, caption="Pyxel Game", fps=DEFAULT_FPS)
         pyxel.load("my_resource.pyxres")
-        self.game_Init()
+        
+        self.scene = SCENE_PLAYING
+        ## i may change this later
+        with open("./levels/level_selector.json") as f:
+            self.level_selc = json.load(f)
+        
+        self.load_level("level_1")
+        #self.game_Init()
+        
+        
         pyxel.run(self.update, self.draw)
+        
+    def get_level_path(self, level:str) -> str:
+        return self.level_selc[level]
+        
+    def load_level(self, level:str) -> None:
+        with open(self.get_level_path(level),'rb') as f:
+            byte_list = f.read()
+            
+        start_x = 0
+        start_y = 0
+        prev_byte = 0
+        prev_cnt  = 8
+        ## 20 x 25
+        
+        cur_x = 0
+        cur_y = 0
+        
+        for (i, byte) in enumerate(byte_list):
+            if byte is prev_byte and not i == len(byte_list) - 1:
+                prev_cnt += 8
+                
+            else:
+                if prev_byte == 20: ## Master Floor
+                    floor = mayFloor(start_x, start_y, prev_cnt+8, 8)
+                    floor.name = "master_floor"
+                    self.gameObjects.append(floor)
+                    
+                elif prev_byte == 34: ## Grass Floor
+                    floor = mayFloor(start_x, start_y, prev_cnt+8, 8)
+                    floor.name = "grass_floor_generic"
+                    self.gameObjects.append(floor)
+                    
+                elif prev_byte == 143: ## Anti Floor
+                    floor = mayFloor(start_x, start_y, prev_cnt+8, 8)
+                    floor.name = "grass_floor_anti"
+                    floor.isInverted = True
+                    self.gameObjects.append(floor)
+                    
+                elif prev_byte == 240: ## Player
+                    self.player = player(start_x, start_y, TILEOFFSET + 1, TILEOFFSET + 1, p_health=PLAYER_DEFAULT_HEALTH)
+            
+                elif prev_byte == 201 or prev_byte == 85: ## NPC Spawn
+                    npc = mayNPC(start_x, start_y, 8, 8, 100, .4, NPC_SIMPLE_ENEMY if prev_byte == 201 else NPC_RANGED_ENEMY ,"enemy-npc-1") 
+                    self.gameObjects.append(npc)
+                    
+                elif prev_byte == 154: ## Coin
+                    self.gameObjects.append(mayCoin(start_x, start_y))
+                    
+                elif prev_byte == 148: ## Health Kit
+                    self.gameObjects.append(mayHealthKit(start_x, start_y))
+                        
+                prev_byte = byte
+                prev_cnt  = 8
+                start_x = cur_x
+                start_y = cur_y
+            
+           
+                
+            cur_x += 8
+            if cur_x >= 208:
+                cur_y += 8
+                cur_x = 0
+                
+            
         
     ## made a separate function so that we can call it later
     def game_Init(self) -> None:
@@ -32,9 +105,9 @@ class App(GameHandler):
         self.gameObjects.append(mayHealthKit(80, 120))
         
         test2Floor.imgID = 1
-        test2Floor.name = "test2_floor"
+        test2Floor.name  = "test2_floor"
         
-        testFloor.name = "test_floor"
+        testFloor.name  = "test_floor"
         testFloor.imgID = 1
         
         self.gameObjects.append(gameFloor)
