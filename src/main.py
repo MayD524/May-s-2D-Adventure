@@ -1,10 +1,10 @@
-from projectile import mayProjectile
-from gameHandler import GameHandler
-from collectables import *
-from gameConsts import *
-from floor import mayFloor
-from player import player
-from npc import mayNPC
+from game_files.projectile import mayProjectile
+from game_files.gameHandler import GameHandler
+from game_files.collectables import *
+from game_files.gameConsts import *
+from game_files.floor import mayFloor
+from game_files.player import player
+from game_files.npc import mayNPC
 import pyxel
 import json
 
@@ -29,7 +29,7 @@ class App(GameHandler):
         return self.level_selc[level]
         
     def load_level(self, level:str) -> None:
-        with open(self.get_level_path(level),'rb') as f:
+        with open(self.level_selc[level],'rb') as f:
             byte_list = f.read()
             
         start_x = 0

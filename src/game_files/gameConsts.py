@@ -47,6 +47,10 @@ COIN_Y_OFFSET   = 16
 HEALTH_KIT_X_OFFSET = 8
 HEALTH_KIT_Y_OFFSET = 16
 
+## Level End img location
+LEVEL_END_X_OFFSET = 32
+LEVEL_END_Y_OFFSET = 0
+
 ## anything higher than 120 breaks things
 ## recommended is to be 30 or 60
 DEFAULT_FPS = 60

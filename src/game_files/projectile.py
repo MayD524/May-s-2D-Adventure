@@ -1,4 +1,4 @@
-from gameObjects import mayGameObject
+from game_files.gameObjects import mayGameObject
 import pyxel
 
 class mayProjectile(mayGameObject):

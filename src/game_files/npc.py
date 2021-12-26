@@ -1,9 +1,8 @@
-from gameConsts import *
-from projectile import mayProjectile
-from gameEntity import mayGameEntity
+from game_files.projectile import mayProjectile
+from game_files.gameEntity import mayGameEntity
+from game_files.gameConsts import *
 import random
 import pyxel
-import time
 
 class mayNPC(mayGameEntity):
     def __init__(self, x:int, y:int, w:int, h:int, hp:int, speed:int, npc_type:int ,name:str) -> None:
